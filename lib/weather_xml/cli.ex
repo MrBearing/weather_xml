@@ -1,6 +1,5 @@
 defmodule WeatherXML.CLI do
   @moduledoc false
-
   def run(argv) do
     argv
     |> parse_args
@@ -36,28 +35,36 @@ defmodule WeatherXML.CLI do
     System.halt(0)
   end
 
-  def process({point_code}) do
-    WetherXML.Web.fetch(point_code)
-    |> decode_response
-#      |> filter({"weather","tempature_string","wind_string"})
-#      |> print_table_for_column
+  def process(point_code) do
+    tag_names = ["weather","temperature_string"]
+    WeatherXML.Web.fetch(point_code)
+    |> Map.get(:body)
+    |> filter(tag_names)
+    |> print_table(tag_names)
   end
 
   def decode_response({:ok, body}), do: body
-
   def decode_response({:error, some})do
     {_, message} = List.keyfind(some, "message",0)
     IO.puts "Error fetching weather : #{message}}"
     System.halt(2)
   end
 
-  def convert_to_list_of_maps(list) do
-    list
-    |> Enum.map(&Enum.into(&1, Map.new))
+  def filter(xml,tag_name_list) do
+    for t <- tag_name_list do
+      filter_with_tag_name(xml,t)
+    end
   end
 
-  def sort_into_ascending_order(list_of_issues) do
-    Enum.sort list_of_issues,
-              fn i1 , i2 -> i1["created_at"] <= i2["created_at"] end
+  def filter_with_tag_name(xml,tag_name) do
+    String.split(xml,["<#{tag_name}>","</#{tag_name}>"])
+    |> Enum.take(2)
+    |> tl
+    |> hd
   end
+
+  def print_table(string_list,tag_names) do
+    WeatherXML.TableFormatter.print_table(string_list,tag_names)
+  end
+
 end

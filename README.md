@@ -78,7 +78,7 @@ URL: https://w1.weather.gov/xml/current_obs/KTMB.xml
 	<longitude>-80.43472</longitude>
 	<observation_time>Last Updated on Feb 10 2020, 11:53 pm EST</observation_time>
         <observation_time_rfc822>Mon, 10 Feb 2020 23:53:00 -0500</observation_time_rfc822>
-	<weather>Fair</weather>
+	<weather>Fair</weather>ie
 	<temperature_string>74.0 F (23.3 C)</temperature_string>
 	<temp_f>74.0</temp_f>
 	<temp_c>23.3</temp_c>
